@@ -13,11 +13,13 @@ public class Execucao {
 
     private int tempo = 0;
     private int acc;
+    private int qntProgramas;
 
     private ComandosAritmeticos comandos = new ComandosAritmeticos();
 
     public Execucao(ArrayList<RrSP> programas) { //Main -> lerPrograma -> Main -> Execucao, com os programas no arraylist
         this.prontos = programas;
+        qntProgramas = programas.size();
         prontos = organizaTempo(prontos);
         executar();
 
@@ -31,18 +33,26 @@ public class Execucao {
 
     public void executar() { //Chama o executar2 caso exista no pronto algum programa no tempoChegada == tempo
 
+        boolean executou = false;
+
         for (int i = 0; i < prontos.size(); i++) {
-            if (prontos.get(i).getTempoChegada() == tempo && executando == null) {
+            if(qntProgramas == finalizados.size()) {
+                System.out.println("Finalizado.");
+                break;
+            }
+            if (prontos.get(i).getTempoChegada() == tempo) {
                 executando = prontos.get(i);
                 prontos.remove(i);
-                executar2();
+                executou = executar2();
+                if(executou == true) finalizados.add(executando);
+                else bloqueados.add(executando);
             } else {
                 tempo++;
             }
         }
     }
 
-    public void executar2() { //Pega os dados do programa: mapa, dados, programa e faz as operações.
+    public boolean executar2() { //Pega os dados do programa: mapa, dados, programa e faz as operações.
 
         ArrayList<String> auxPrograma = executando.getPrograma();
         Map<String, String> dados = executando.getDados();
@@ -56,7 +66,7 @@ public class Execucao {
             int tempoEntrou = tempo;
             if ((tempo - tempoEntrou) == executando.getQuantum()) {   // Falta ver se o Quantum e Tempo de chegada estão operando corretamente
                 System.out.println("Acabou o quantum!");
-                break;
+                return false;
             }
             pc = executando.getPc();
 
@@ -134,16 +144,17 @@ public class Execucao {
                     System.out.println("Finalizou");
                 }
                 if (auxPrograma.get(1).equals("1")) {  //FALTA FAZER SYSCALL 1 E SYSCALL 2
-
+                    return false;
                 }
                 if (auxPrograma.get(1).equals("2")) {
-
+                    return false;
                 }
 
             }
             executando.setPc(pc + 1);
             tempo++;
         }
+        return true;
     }
 }
 
