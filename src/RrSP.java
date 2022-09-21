@@ -7,16 +7,18 @@ public class RrSP {
     private int quantum;
     private int tempoChegada;
     private int pc = 0;
+    private String nomeArquivo;
     private ArrayList<String> programa;
     private Map<String, String> dados;
     private Map<String, Integer> mapa;
 
-    public RrSP(ArrayList<String> programa, Map<String, String> dados, Map<String, Integer> mapa, int quantum, int tempoChegada){
+    public RrSP(ArrayList<String> programa, Map<String, String> dados, Map<String, Integer> mapa, int quantum, int tempoChegada, String nomeArquivo){
         this.quantum = quantum;
         this.tempoChegada = tempoChegada;
         this.programa = programa;
         this.dados = dados;
         this.mapa = mapa;
+        this.nomeArquivo = nomeArquivo;
     }
 
     public int getQuantum() {
@@ -25,6 +27,14 @@ public class RrSP {
 
     public void setQuantum(int quantum) {
         this.quantum = quantum;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
+    }
+
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
     }
 
     public int getTempoChegada() {

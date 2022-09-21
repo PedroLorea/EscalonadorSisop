@@ -11,10 +11,10 @@ public class Main {
         LerArquivo lerArquivo = new LerArquivo();
 
         int op;
-        int op2;
         int quantum;
         int tempoChegada;
         String nomePrograma;
+
 
 
         do {

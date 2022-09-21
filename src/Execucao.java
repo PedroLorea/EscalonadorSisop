@@ -1,21 +1,24 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Execucao {
 
     private ArrayList<RrSP> prontos = new ArrayList<RrSP>();
-    private RrSP executando;
-    private ArrayList<RrSP> bloqueados = new ArrayList<RrSP>();
+    private Map<RrSP, Integer> bloqueados = new HashMap<RrSP, Integer>();
     private ArrayList<RrSP> finalizados = new ArrayList<RrSP>();
 
-    private Map<String, Integer> memoria = new HashMap<>();
+    private ArrayList<String> auxPrograma = new ArrayList<>();
+    private Map<String, String> dados = new HashMap<String, String>();
+    private Map<String, Integer> auxMapa = new HashMap<String, Integer>();
 
     private int tempo = 0;
     private int acc;
     private int qntProgramas;
 
     private ComandosAritmeticos comandos = new ComandosAritmeticos();
+    Scanner in = new Scanner(System.in);
 
     public Execucao(ArrayList<RrSP> programas) { //Main -> lerPrograma -> Main -> Execucao, com os programas no arraylist
         this.prontos = programas;
@@ -26,52 +29,95 @@ public class Execucao {
     }
 
     public ArrayList<RrSP> organizaTempo(ArrayList<RrSP> organizaTempo) { //Organiza tempo de chegada em ordem, sendo o 1º o menor tempo de chegada
-        if (organizaTempo.size() > 1)
+        if (organizaTempo.size() >= 0)
             organizaTempo.sort((p1, p2) -> Integer.compare(p1.getTempoChegada(), p2.getTempoChegada()));
         return organizaTempo;
     }
 
-    public void executar() { //Chama o executar2 caso exista no pronto algum programa no tempoChegada == tempo
+    public void bloqueados(){                   //MEMÓRIA!!!!!!!!!!!!!!!!!//==213=-213=-231=2312134-234-023-0=345-90=39502035402394039142
+        if(bloqueados.size() >= 1){
+            RrSP rrSP;
+            int contador;
 
-        boolean executou = false;
-
-        for (int i = 0; i < prontos.size(); i++) {
-            if(qntProgramas == finalizados.size()) {
-                System.out.println("Finalizado.");
-                break;
-            }
-            if (prontos.get(i).getTempoChegada() == tempo) {
-                executando = prontos.get(i);
-                prontos.remove(i);
-                executou = executar2();
-                if(executou == true) finalizados.add(executando);
-                else bloqueados.add(executando);
-            } else {
-                tempo++;
+            for (Map.Entry<RrSP, Integer> entrada : bloqueados.entrySet()) {
+                rrSP = entrada.getKey();
+                contador = entrada.getValue();
+                if(contador == 0){
+                    rrSP.setTempoChegada(-1);
+                    prontos.add(rrSP);
+                    bloqueados.remove(rrSP);
+                } else {
+                    bloqueados.replace(rrSP, contador - 1);
+                }
             }
         }
     }
 
-    public boolean executar2() { //Pega os dados do programa: mapa, dados, programa e faz as operações.
+    public int gerador(){
+        int max = 15;
+        int min = 10;
+        int intervalo = max - min + 1;
+        return (int)(Math.random() * intervalo) + min;
+    }
 
-        ArrayList<String> auxPrograma = executando.getPrograma();
-        Map<String, String> dados = executando.getDados();
-        Map<String, Integer> auxMapa = executando.getMapa();
+    public void executar() { //Chama o executar2 caso exista no pronto algum programa no tempoChegada == tempo
+
+        boolean executou;
+        RrSP executando;
+
+        while(qntProgramas != finalizados.size()) {
+
+            if(prontos.size() >= 1) {
+                for (int i = 0; i < prontos.size(); i++) {
+                    System.out.println(prontos.size() + "aaaa");
+                    if (prontos.get(i).getTempoChegada() == tempo || prontos.get(i).getTempoChegada() == -1) {
+                        executando = prontos.get(i);
+                        acc = 0;
+                        System.out.println("Executando: " + executando.getNomeArquivo());
+                        prontos.remove(i);
+                        executou = executar2(executando);
+                        if (executou == true) {
+                            for(int j=0; j<prontos.size(); j++) {
+                                prontos.get(j).setTempoChegada(tempo+1);
+                            }
+                            break;
+                        }
+                        else {
+                            bloqueados.put(executando, gerador());
+                        }
+                    }
+                }
+            }
+            bloqueados();
+            tempo++;
+        }
+        System.out.println("Finalizado qntProgramas == finalizados.size()");
+        System.exit(0);
+    }
+    
+
+    public boolean executar2(RrSP executando) { //Pega os dados do programa: mapa, dados, programa e faz as operações.
+        auxPrograma.clear();
+        dados.clear();
+        auxMapa.clear();
+        auxPrograma = executando.getPrograma();
+        dados = executando.getDados();
+        auxMapa = executando.getMapa();
         String auxInstrucao;
         int auxIntrucaoInt;
         int pc;
 
 
         while (executando.getPc() < auxPrograma.size() / 2) {
+
             int tempoEntrou = tempo;
-            if ((tempo - tempoEntrou) == executando.getQuantum()) {   // Falta ver se o Quantum e Tempo de chegada estão operando corretamente
+            if ((tempo - tempoEntrou) == executando.getQuantum()) {   //PERGUNTA: Se acabar o quantum, ele espera na fila para entrar novamente ou fica pela metade??
                 System.out.println("Acabou o quantum!");
-                return false;
+                return true;
             }
             pc = executando.getPc();
-
             if(pc==0) {
-                auxInstrucao = auxPrograma.get(0);
+                auxInstrucao = auxPrograma.get(0); // Pc==0 pc==1, por questão da maneira como ta o código lá em baixo, a multiplicação da errada, então tem que fazer os if's
                 auxIntrucaoInt = 0;
             }
             else if(pc == 1) {
@@ -85,20 +131,29 @@ public class Execucao {
 
             System.out.println("PC = " + pc); //Teste
             System.out.println("ACC = " + acc); //Teste
+            System.out.println("TEMPO = " + tempo); //Teste
 
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
-                if ((auxPrograma.get(pc * 2 + 1)).contains("#")) {
+                if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
+                    acc = comandos.add(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1)))); //REPLICAR PARA OUTRAS OPERAÇÕES ARITMÉTICAS
+                }
+                else if ((auxPrograma.get(pc * 2 + 1)).contains("#")) {
                     int indice = auxPrograma.get(pc * 2 + 1).indexOf("#");
                     acc = comandos.add(acc, indice + 1);
-                } else acc = comandos.add(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
+                }
+                else acc = comandos.add(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
             }
 
             if (auxInstrucao.equalsIgnoreCase("sub")) {
-                if (auxInstrucao.contains("#")) {
-                    int indice = auxInstrucao.indexOf("#");
+                if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
+                    acc = comandos.sub(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1)))); //REPLICAR PARA OUTRAS OPERAÇÕES ARITMÉTICAS
+                }
+                else if ((auxPrograma.get(pc * 2 + 1)).contains("#")) {
+                    int indice = auxPrograma.get(pc * 2 + 1).indexOf("#");
                     acc = comandos.sub(acc, indice + 1);
-                } else acc = comandos.sub(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
+                }
+                else acc = comandos.sub(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
             }
 
             if (auxInstrucao.equalsIgnoreCase("mult")) {
@@ -123,37 +178,44 @@ public class Execucao {
                 dados.replace(String.valueOf(auxPrograma.get(auxIntrucaoInt+1)), String.valueOf(acc));  
             }
 
-            if (auxInstrucao.equalsIgnoreCase("brany")) {
-                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)));
-            }
 
+            if (auxInstrucao.equalsIgnoreCase("brany")) {
+                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+ ":")); //O QUE É BRANY?????
+            }
             if (auxInstrucao.equalsIgnoreCase("brpos")) {
-                if (acc > 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2)));
+                if (acc > 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 +1)+":"));
             }
 
             if (auxInstrucao.equalsIgnoreCase("brzero")) {
-                if (acc == 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2)));
+                if (acc == 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
             }
             if (auxInstrucao.equalsIgnoreCase("brneg")) {
-                if (acc < 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2)));
+                if (acc < 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
             }
 
             if (auxInstrucao.equalsIgnoreCase("syscall")) {
-                if (auxPrograma.get(1).equals("0")) {
+                if (auxPrograma.get(auxIntrucaoInt+1).equals("0")) {
                     finalizados.add(executando);
-                    System.out.println("Finalizou");
+                    return true;
                 }
-                if (auxPrograma.get(1).equals("1")) {  //FALTA FAZER SYSCALL 1 E SYSCALL 2
+                if (auxPrograma.get(auxIntrucaoInt+1).equals("1")) {
+                    System.out.println(acc);
+                    executando.setPc(pc+1);
                     return false;
                 }
-                if (auxPrograma.get(1).equals("2")) {
+                if (auxPrograma.get(auxIntrucaoInt+1).equals("2")) {
+                    int a = in.nextInt();
+                    acc = a;
+                    executando.setPc(pc+1);
                     return false;
                 }
-
             }
+
             executando.setPc(pc + 1);
+            bloqueados();
             tempo++;
         }
+        System.out.println("Acabou instruções programa.");
         return true;
     }
 }

@@ -48,7 +48,7 @@ public class LerArquivo {
             e.printStackTrace();
         }
 
-        prog = new RrSP(programa, dados, mapa, quantum, tempoChegada);
+        prog = new RrSP(programa, dados, mapa, quantum, tempoChegada, nomeArquivo);
         return prog;
     }
 
@@ -56,11 +56,6 @@ public class LerArquivo {
         int a = mapa.get(".data");
         for(int i=a; i<programa.size(); i=i+2){
             dados.put(programa.get(i), programa.get(i+1));
-        }
-
-        for (String chave : dados.keySet()) { //APENAS PARA CHECKAR SE ESTÁ PEGANDO OS DADOS
-            String valor = dados.get(chave);
-            System.out.println(chave + " = " + valor);
         }
     }
 }
