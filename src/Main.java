@@ -8,8 +8,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
-        LerArquivo lerArquivo = new LerArquivo();
-
         int op;
         int quantum;
         int tempoChegada;
@@ -25,6 +23,7 @@ public class Main {
             switch(op){
 
                 case 1: //ADICIONAR PROGRAMA
+                    LerArquivo lerArquivo = new LerArquivo();
                     System.out.println("Digite o nome do programa.");
                     in.nextLine();
                     nomePrograma = in.nextLine();

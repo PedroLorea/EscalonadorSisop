@@ -24,6 +24,10 @@ public class Execucao {
         this.prontos = programas;
         qntProgramas = programas.size();
         prontos = organizaTempo(prontos);
+        for (int i = 0; i < prontos.size(); i++) { //Teste
+            System.out.println("Número de instruções no programa: ");
+            System.out.println(prontos.get(i).getPrograma().size());
+        }
         executar();
 
     }
@@ -69,16 +73,14 @@ public class Execucao {
 
             if(prontos.size() >= 1) {
                 for (int i = 0; i < prontos.size(); i++) {
-                    System.out.println(prontos.size() + "aaaa");
+                    System.out.println("Qnt Fila Prontos: " + prontos.size());
                     if (prontos.get(i).getTempoChegada() == tempo || prontos.get(i).getTempoChegada() == -1) {
                         executando = prontos.get(i);
-                        acc = 0;
-                        System.out.println("Executando: " + executando.getNomeArquivo());
                         prontos.remove(i);
                         executou = executar2(executando);
                         if (executou == true) {
                             for(int j=0; j<prontos.size(); j++) {
-                                prontos.get(j).setTempoChegada(tempo+1);
+                                if(prontos.get(i).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
                             }
                             break;
                         }
@@ -91,28 +93,28 @@ public class Execucao {
             bloqueados();
             tempo++;
         }
-        System.out.println("Finalizado qntProgramas == finalizados.size()");
+        System.out.println("Finalizado: QuantidadeProgramas == QuantidadeFinalizados");
         System.exit(0);
     }
     
 
     public boolean executar2(RrSP executando) { //Pega os dados do programa: mapa, dados, programa e faz as operações.
-        auxPrograma.clear();
-        dados.clear();
-        auxMapa.clear();
         auxPrograma = executando.getPrograma();
         dados = executando.getDados();
         auxMapa = executando.getMapa();
+
+
+        
         String auxInstrucao;
         int auxIntrucaoInt;
         int pc;
-
+        int tempoEntrou = tempo;
 
         while (executando.getPc() < auxPrograma.size() / 2) {
 
-            int tempoEntrou = tempo;
             if ((tempo - tempoEntrou) == executando.getQuantum()) {   //PERGUNTA: Se acabar o quantum, ele espera na fila para entrar novamente ou fica pela metade??
                 System.out.println("Acabou o quantum!");
+                finalizados.add(executando);
                 return true;
             }
             pc = executando.getPc();
@@ -129,10 +131,8 @@ public class Execucao {
                 auxIntrucaoInt = pc*2;
             }
 
-            System.out.println("PC = " + pc); //Teste
-            System.out.println("ACC = " + acc); //Teste
-            System.out.println("TEMPO = " + tempo); //Teste
-
+            System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo());
+            System.out.println(executando.getTempoChegada() + " || " + tempo);
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
@@ -199,7 +199,7 @@ public class Execucao {
                     return true;
                 }
                 if (auxPrograma.get(auxIntrucaoInt+1).equals("1")) {
-                    System.out.println(acc);
+                    System.out.println("SAÍDA DE TELA: " + acc);
                     executando.setPc(pc+1);
                     return false;
                 }
