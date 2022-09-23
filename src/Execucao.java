@@ -47,7 +47,7 @@ public class Execucao {
                 rrSP = entrada.getKey();
                 contador = entrada.getValue();
                 if(contador == 0){
-                    rrSP.setTempoChegada(-1);
+                    rrSP.setTempoChegada(tempo+1);
                     prontos.add(rrSP);
                     bloqueados.remove(rrSP);
                 } else {
@@ -74,10 +74,10 @@ public class Execucao {
             if(prontos.size() >= 1) {
                 for (int i = 0; i < prontos.size(); i++) {
                     System.out.println("Qnt Fila Prontos: " + prontos.size());
-                    if (prontos.get(i).getTempoChegada() == tempo || prontos.get(i).getTempoChegada() == -1) {
+                    if (prontos.get(i).getTempoChegada() == tempo) {
                         executando = prontos.get(i);
                         prontos.remove(i);
-                        executou = executar2(executando);
+                        executou = executar2(executando); // Acc não está zerando quando troca de prog
                         if (executou == true) {
                             for(int j=0; j<prontos.size(); j++) {
                                 if(prontos.get(i).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
@@ -112,7 +112,7 @@ public class Execucao {
 
         while (executando.getPc() < auxPrograma.size() / 2) {
 
-            if ((tempo - tempoEntrou) == executando.getQuantum()) {   //PERGUNTA: Se acabar o quantum, ele espera na fila para entrar novamente ou fica pela metade??
+            if ((tempo - tempoEntrou) == executando.getQuantum()) {   
                 System.out.println("Acabou o quantum!");
                 finalizados.add(executando);
                 return true;
