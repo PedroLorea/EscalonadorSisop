@@ -102,6 +102,7 @@ public class Execucao {
         auxPrograma = executando.getPrograma();
         dados = executando.getDados();
         auxMapa = executando.getMapa();
+        acc = executando.getAccProg();
 
 
         
@@ -131,12 +132,12 @@ public class Execucao {
                 auxIntrucaoInt = pc*2;
             }
 
-            System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo());
+            System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo() + " || Instrução: " + auxInstrucao + " " + auxPrograma.get(pc*2+1));
             System.out.println(executando.getTempoChegada() + " || " + tempo);
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
-                    acc = comandos.add(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1)))); //REPLICAR PARA OUTRAS OPERAÇÕES ARITMÉTICAS
+                    acc = comandos.add(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1))));
                 }
                 else if ((auxPrograma.get(pc * 2 + 1)).contains("#")) {
                     int indice = auxPrograma.get(pc * 2 + 1).indexOf("#");
@@ -147,7 +148,7 @@ public class Execucao {
 
             if (auxInstrucao.equalsIgnoreCase("sub")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
-                    acc = comandos.sub(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1)))); //REPLICAR PARA OUTRAS OPERAÇÕES ARITMÉTICAS
+                    acc = comandos.sub(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1))));
                 }
                 else if ((auxPrograma.get(pc * 2 + 1)).contains("#")) {
                     int indice = auxPrograma.get(pc * 2 + 1).indexOf("#");
@@ -157,17 +158,23 @@ public class Execucao {
             }
 
             if (auxInstrucao.equalsIgnoreCase("mult")) {
-                if (auxInstrucao.contains("#")) {
+                if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
+                    acc = comandos.mult(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1))));
+                }
+                else if (auxInstrucao.contains("#")) {
                     int indice = auxInstrucao.indexOf("#");
                     acc = comandos.mult(acc, indice + 1);
                 } else acc = comandos.mult(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
             }
 
             if (auxInstrucao.equalsIgnoreCase("div")) {
-                if (auxInstrucao.contains("#")) {
+                if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
+                    acc = comandos.div(acc, Integer.parseInt(dados.get(auxPrograma.get(pc*2+1))));
+                }
+                else if (auxInstrucao.contains("#")) {
                     int indice = auxInstrucao.indexOf("#");
                     acc = comandos.div(acc, indice + 1);
-                } else acc = comandos.div(acc, Integer.parseInt(auxPrograma.get(pc * 2)));
+                } else acc = comandos.div(acc, Integer.parseInt(auxPrograma.get(pc * 2 + 1)));
             }
 
             if (auxInstrucao.equalsIgnoreCase("load")) {
@@ -180,17 +187,27 @@ public class Execucao {
 
 
             if (auxInstrucao.equalsIgnoreCase("brany")) {
-                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+ ":")); //O QUE É BRANY?????
+                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+ ":"));  //executando.setPc NÃO TÁ FUNCIONADO...
+                pc = executando.getPc()-1;
             }
             if (auxInstrucao.equalsIgnoreCase("brpos")) {
-                if (acc > 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 +1)+":"));
+                if (acc > 0) {
+                    executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1) + ":"));
+                    pc = executando.getPc() - 1;
+                }
             }
 
             if (auxInstrucao.equalsIgnoreCase("brzero")) {
-                if (acc == 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
+                if (acc == 0) {
+                    executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
+                    pc = executando.getPc()-1;
+                }
             }
             if (auxInstrucao.equalsIgnoreCase("brneg")) {
-                if (acc < 0) executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
+                if (acc < 0) {
+                    executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+":"));
+                    pc = executando.getPc()-1;
+                }
             }
 
             if (auxInstrucao.equalsIgnoreCase("syscall")) {
@@ -204,13 +221,15 @@ public class Execucao {
                     return false;
                 }
                 if (auxPrograma.get(auxIntrucaoInt+1).equals("2")) {
+                    System.out.println("DIGITAR DADO:");
                     int a = in.nextInt();
                     acc = a;
+                    executando.setAccProg(acc);
                     executando.setPc(pc+1);
                     return false;
                 }
             }
-
+            executando.setAccProg(acc);
             executando.setPc(pc + 1);
             bloqueados();
             tempo++;

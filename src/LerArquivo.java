@@ -33,7 +33,7 @@ public class LerArquivo {
                 }
                 String[] separa = linha.split(espaço);
                 if (separa[0].contains(":")) {
-                    mapa.put(separa[0], programa.size()); //Adiociona os labels no mapa (HashMap, ou seja, label tal está no PC: 4)
+                    mapa.put(separa[0], programa.size()/2); //Adiociona os labels no mapa (HashMap, ou seja, label tal está no PC: 4)
                 }
                 if(separa[0].contains(":") || separa[0].contains(".")) continue; // Ex: .code, loop:
 

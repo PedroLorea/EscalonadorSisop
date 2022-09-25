@@ -6,7 +6,8 @@ public class RrSP {
 
     private int quantum;
     private int tempoChegada;
-    private int pc = 0;
+    public int pc = 0;
+    private int accProg = 0;
     private String nomeArquivo;
     private ArrayList<String> programa;
     private Map<String, String> dados;
@@ -19,6 +20,14 @@ public class RrSP {
         this.dados = dados;
         this.mapa = mapa;
         this.nomeArquivo = nomeArquivo;
+    }
+
+    public int getAccProg() {
+        return accProg;
+    }
+
+    public void setAccProg(int accProg) {
+        this.accProg = accProg;
     }
 
     public int getQuantum() {
