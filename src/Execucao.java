@@ -187,7 +187,7 @@ public class Execucao {
 
 
             if (auxInstrucao.equalsIgnoreCase("brany")) {
-                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+ ":"));  //executando.setPc NÃO TÁ FUNCIONADO...
+                executando.setPc(auxMapa.get(auxPrograma.get(pc * 2 + 1)+ ":"));
                 pc = executando.getPc()-1;
             }
             if (auxInstrucao.equalsIgnoreCase("brpos")) {
