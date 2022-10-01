@@ -38,7 +38,7 @@ public class Execucao {
         return organizaTempo;
     }
 
-    public void bloqueados(){                   //MEMÓRIA!!!!!!!!!!!!!!!!!//==213=-213=-231=2312134-234-023-0=345-90=39502035402394039142
+    public void bloqueados(){
         if(bloqueados.size() >= 1){
             RrSP rrSP;
             int contador;
@@ -64,7 +64,7 @@ public class Execucao {
         return (int)(Math.random() * intervalo) + min;
     }
 
-    public void executar() { //Chama o executar2 caso exista no pronto algum programa no tempoChegada == tempo
+    public void executar() { //Chama o executar2(), caso exista no pronto algum programa no tempoChegada == tempo
 
         boolean executou;
         RrSP executando;
@@ -77,7 +77,7 @@ public class Execucao {
                     if (prontos.get(i).getTempoChegada() == tempo) {
                         executando = prontos.get(i);
                         prontos.remove(i);
-                        executou = executar2(executando); // Acc não está zerando quando troca de prog
+                        executou = executar2(executando);
                         if (executou == true) {
                             for(int j=0; j<prontos.size(); j++) {
                                 if(prontos.get(i).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
@@ -98,7 +98,7 @@ public class Execucao {
     }
     
 
-    public boolean executar2(RrSP executando) { //Pega os dados do programa: mapa, dados, programa e faz as operações.
+    public boolean executar2(RrSP executando) { //Pega os dados do programa: mapa, dados, programa(intruções) e faz as operações.
         auxPrograma = executando.getPrograma();
         dados = executando.getDados();
         auxMapa = executando.getMapa();
