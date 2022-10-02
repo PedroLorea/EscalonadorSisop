@@ -16,6 +16,7 @@ public class ExecucaoCP {
     private int tempo = 0;
     private int acc;
     private int qntProgramas;
+    private int var;
 
     private ComandosAritmeticos comandos = new ComandosAritmeticos();
     Scanner in = new Scanner(System.in);
@@ -77,11 +78,12 @@ public class ExecucaoCP {
 
         while(qntProgramas != finalizados.size()) {
             if(prontos.size() >= 1) {
+                prontos = organizaPrioridade(prontos);
                 for (int i = 0; i < prontos.size(); i++) {
                     System.out.println("Qnt Fila Prontos: " + prontos.size());
                     if (prontos.get(i).getTempoChegada() == tempo) {
                         executando = prontos.get(i);
-                        System.out.println("executando" + executando.getPrioridade());
+                        System.out.println("EXECUTANDO PROGRAMA PRIORIDADE: " + executando.getPrioridade());
                         prontos.remove(i);
                         executou = executar2(executando);
                         if (executou == true) {
@@ -91,7 +93,12 @@ public class ExecucaoCP {
                             break;
                         }
                         else {
-                            bloqueados.put(executando, gerador());
+                            if (var == 1) {
+                                bloqueados.put(executando, gerador());
+                            }
+                            else {
+                                prontos.add(executando);
+                            }
                         }
                     }
                 }
@@ -119,6 +126,13 @@ public class ExecucaoCP {
 
         while (executando.getPc() < auxPrograma.size() / 2) {
 
+            for(int i=0 ; i<prontos.size(); i++){
+                if(executando.getPrioridade() > prontos.get(i).getPrioridade() && prontos.get(i).getTempoChegada() <= tempo) {
+                    var = 2;
+                    return false;
+                }
+            }
+
             if ((tempo - tempoEntrou) == executando.getQuantum()) {
                 System.out.println("Acabou o quantum!");
                 finalizados.add(executando);
@@ -139,7 +153,6 @@ public class ExecucaoCP {
             }
 
             System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo() + " || Instrução: " + auxInstrucao + " " + auxPrograma.get(pc*2+1));
-            System.out.println(executando.getTempoChegada() + " || " + tempo);
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
@@ -224,6 +237,7 @@ public class ExecucaoCP {
                 if (auxPrograma.get(auxIntrucaoInt+1).equals("1")) {
                     System.out.println("SAÍDA DE TELA: " + acc);
                     executando.setPc(pc+1);
+                    var = 1;
                     return false;
                 }
                 if (auxPrograma.get(auxIntrucaoInt+1).equals("2")) {
@@ -232,6 +246,7 @@ public class ExecucaoCP {
                     acc = a;
                     executando.setAccProg(acc);
                     executando.setPc(pc+1);
+                    var = 1;
                     return false;
                 }
             }

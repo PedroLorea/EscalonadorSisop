@@ -22,8 +22,10 @@ public class Main {
         switch (op1) {
             case 1:
                 opPrioridade = 1;
+                break;
             case 2:
                 opPrioridade = 2;
+                break;
         }
 
 
@@ -88,6 +90,19 @@ public class Main {
 
                     case 2:
                         ExecucaoCP exec = new ExecucaoCP(programasCP);
+
+                    case 3:
+                        //APENSAS PARA TESTAR E NÃO TER QUE FICAR ESCREVENDO TODA VEZ
+                        LerArquivoCP lerArquivocp2 = new LerArquivoCP();
+                        RrCP prog3 = lerArquivocp2.Armazena("prog1.txt", 20, 16, 0);
+                        programasCP.add(prog3);
+                        LerArquivoCP lerArquivocp3 = new LerArquivoCP();
+                        RrCP prog4 = lerArquivocp3.Armazena("prog.txt", 40, 0, 1);
+                        programasCP.add(prog4);
+                        //LerArquivoCP lerArquivocp4 = new LerArquivoCP();
+                        //RrCP prog5 = lerArquivocp4.Armazena("prog.txt", 20, 5, 1);
+                        //programasCP.add(prog5);
+                        break;
 
                     case 0:
                         System.exit(0);

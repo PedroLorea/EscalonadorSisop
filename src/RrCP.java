@@ -21,6 +21,7 @@ public class RrCP {
         this.dados = dados;
         this.mapa = mapa;
         this.nomeArquivo = nomeArquivo;
+        this.prioridade = prioridade;
     }
 
     public int getPrioridade() {
