@@ -88,7 +88,7 @@ public class ExecucaoCP {
                         executou = executar2(executando);
                         if (executou == true) {
                             for(int j=0; j<prontos.size(); j++) {
-                                if(prontos.get(i).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
+                                if(prontos.get(j).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
                             }
                             break;
                         }
@@ -97,6 +97,9 @@ public class ExecucaoCP {
                                 bloqueados.put(executando, gerador());
                             }
                             else {
+                                for(int j=0; j<prontos.size(); j++) {
+                                    if(prontos.get(j).getTempoChegada() <= tempo) prontos.get(j).setTempoChegada(tempo+1);
+                                }
                                 prontos.add(executando);
                             }
                         }
