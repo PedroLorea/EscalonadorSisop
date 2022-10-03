@@ -25,10 +25,6 @@ public class ExecucaoCP {
         this.prontos = programas;
         qntProgramas = programas.size();
         prontos = organizaTempo(prontos);
-        for (int i = 0; i < prontos.size(); i++) { //Teste
-            System.out.println("Número de instruções no programa: ");
-            System.out.println(prontos.get(i).getPrograma().size());
-        }
         executar();
 
     }
@@ -78,12 +74,12 @@ public class ExecucaoCP {
 
         while(qntProgramas != finalizados.size()) {
             if(prontos.size() >= 1) {
+                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalziados: " + finalizados.size() + " ||");
+
                 prontos = organizaPrioridade(prontos);
                 for (int i = 0; i < prontos.size(); i++) {
-                    System.out.println("Qnt Fila Prontos: " + prontos.size());
                     if (prontos.get(i).getTempoChegada() == tempo) {
                         executando = prontos.get(i);
-                        System.out.println("EXECUTANDO PROGRAMA PRIORIDADE: " + executando.getPrioridade());
                         prontos.remove(i);
                         executou = executar2(executando);
                         if (executou == true) {
@@ -143,7 +139,7 @@ public class ExecucaoCP {
             }
             pc = executando.getPc();
             if(pc==0) {
-                auxInstrucao = auxPrograma.get(0); // Pc==0 pc==1, por questão da maneira como ta o código lá em baixo, a multiplicação da errada, então tem que fazer os if's
+                auxInstrucao = auxPrograma.get(0);
                 auxIntrucaoInt = 0;
             }
             else if(pc == 1) {
@@ -155,7 +151,7 @@ public class ExecucaoCP {
                 auxIntrucaoInt = pc*2;
             }
 
-            System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo() + " || Instrução: " + auxInstrucao + " " + auxPrograma.get(pc*2+1));
+            System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo() + " || Instrução: " + auxInstrucao + " " + auxPrograma.get(pc*2+1) + " || Prioridade: " + executando.getPrioridade());
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
