@@ -72,6 +72,7 @@ public class Execucao {
         while(qntProgramas != finalizados.size()) {
 
             if(prontos.size() >= 1) {
+                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalizados: " + finalizados.size() + " ||");
                 for (int i = 0; i < prontos.size(); i++) {
                     System.out.println("Qnt Fila Prontos: " + prontos.size());
                     if (prontos.get(i).getTempoChegada() == tempo) {
@@ -115,12 +116,12 @@ public class Execucao {
 
             if ((tempo - tempoEntrou) == executando.getQuantum()) {   
                 System.out.println("Acabou o quantum!");
-                finalizados.add(executando);
+                prontos.add(executando);
                 return true;
             }
             pc = executando.getPc();
             if(pc==0) {
-                auxInstrucao = auxPrograma.get(0); // Pc==0 pc==1, por questão da maneira como ta o código lá em baixo, a multiplicação da errada, então tem que fazer os if's
+                auxInstrucao = auxPrograma.get(0);
                 auxIntrucaoInt = 0;
             }
             else if(pc == 1) {

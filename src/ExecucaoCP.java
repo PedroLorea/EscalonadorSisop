@@ -74,7 +74,7 @@ public class ExecucaoCP {
 
         while(qntProgramas != finalizados.size()) {
             if(prontos.size() >= 1) {
-                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalziados: " + finalizados.size() + " ||");
+                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalizados: " + finalizados.size() + " ||");
 
                 prontos = organizaPrioridade(prontos);
                 for (int i = 0; i < prontos.size(); i++) {

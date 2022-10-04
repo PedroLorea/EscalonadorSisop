@@ -31,7 +31,7 @@ public class Main {
 
         if (opPrioridade == 1) {
             do {
-                System.out.println("Bem-vindo ao Escalonador. \n0- Sair \n1- Adicionar programa SEM prioridade \n2- Adicionar programa COM prioridade \n3- Inicializar Escalonador SEM prioridade \n4- Inicializar Escalonador COM prioridade");
+                System.out.println("Bem-vindo ao Escalonador. \n0- Sair \n1- Adicionar programa SEM prioridade \n2- Inicializar Escalonador SEM prioridade");
 
                 op = in.nextInt();
 
