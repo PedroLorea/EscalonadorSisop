@@ -74,7 +74,7 @@ public class ExecucaoCP {
 
         while(qntProgramas != finalizados.size()) {
             if(prontos.size() >= 1) {
-                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalizados: " + finalizados.size() + " ||");
+                System.out.println("|| Fila Prontos: " + prontos.size() + " |Nomes:" + getProntos() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " |Nomes: " + getBloqueados() + " ||\n|| Fila Finalizados: " + finalizados.size() +  " |Nomes: " + getFinalizados() + " ||");
 
                 prontos = organizaPrioridade(prontos);
                 for (int i = 0; i < prontos.size(); i++) {
@@ -134,7 +134,7 @@ public class ExecucaoCP {
 
             if ((tempo - tempoEntrou) == executando.getQuantum()) {
                 System.out.println("Acabou o quantum!");
-                finalizados.add(executando);
+                prontos.add(executando);
                 return true;
             }
             pc = executando.getPc();
@@ -256,6 +256,30 @@ public class ExecucaoCP {
         }
         System.out.println("Acabou instruções programa.");
         return true;
+    }
+
+    public String getFinalizados(){
+        String aux  = "";
+        for(int i=0; i<finalizados.size(); i++){
+            aux = aux + ", "+finalizados.get(i).getNomeArquivo();
+        }
+        return aux;
+    }
+
+    public String getProntos(){
+        String aux  = "";
+        for(int i=0; i<prontos.size(); i++){
+            aux = aux + ", "+prontos.get(i).getNomeArquivo();
+        }
+        return aux;
+    }
+
+    public String getBloqueados(){
+        String aux = "";
+        for (java.util.Map.Entry<RrCP, Integer> entrada : bloqueados.entrySet()) {
+            aux = aux + ", " + entrada.getKey().getNomeArquivo();
+       }
+        return aux;
     }
 }
 

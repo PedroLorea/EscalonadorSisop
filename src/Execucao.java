@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 public class Execucao {
 
@@ -24,10 +25,6 @@ public class Execucao {
         this.prontos = programas;
         qntProgramas = programas.size();
         prontos = organizaTempo(prontos);
-        for (int i = 0; i < prontos.size(); i++) { //Teste
-            System.out.println("Número de instruções no programa: ");
-            System.out.println(prontos.get(i).getPrograma().size());
-        }
         executar();
 
     }
@@ -72,9 +69,9 @@ public class Execucao {
         while(qntProgramas != finalizados.size()) {
 
             if(prontos.size() >= 1) {
-                System.out.println("|| Fila Prontos: " + prontos.size() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " ||\n|| Fila Finalizados: " + finalizados.size() + " ||");
+                System.out.println("|| Fila Prontos: " + prontos.size() + " |Nomes:" + getProntos() + " ||\n|| Fila Bloqueados: " + bloqueados.size() + " |Nomes: " + getBloqueados() + " ||\n|| Fila Finalizados: " + finalizados.size() +  " |Nomes: " + getFinalizados() + " ||");
+                
                 for (int i = 0; i < prontos.size(); i++) {
-                    System.out.println("Qnt Fila Prontos: " + prontos.size());
                     if (prontos.get(i).getTempoChegada() == tempo) {
                         executando = prontos.get(i);
                         prontos.remove(i);
@@ -134,7 +131,6 @@ public class Execucao {
             }
 
             System.out.println("PC: " + pc + " | ACC = " + acc + " | TEMPO = " + tempo +" | Executando: " + executando.getNomeArquivo() + " || Instrução: " + auxInstrucao + " " + auxPrograma.get(pc*2+1));
-            System.out.println(executando.getTempoChegada() + " || " + tempo);
 
             if (auxInstrucao.equalsIgnoreCase("add")) {
                 if(auxPrograma.get(pc*2+1).matches("[a-z]*")){
@@ -237,6 +233,30 @@ public class Execucao {
         }
         System.out.println("Acabou instruções programa.");
         return true;
+    }
+
+    public String getFinalizados(){
+        String aux  = "";
+        for(int i=0; i<finalizados.size(); i++){
+            aux = aux + ", "+finalizados.get(i).getNomeArquivo();
+        }
+        return aux;
+    }
+
+    public String getProntos(){
+        String aux  = "";
+        for(int i=0; i<prontos.size(); i++){
+            aux = aux + ", "+prontos.get(i).getNomeArquivo();
+        }
+        return aux;
+    }
+
+    public String getBloqueados(){
+        String aux = "";
+        for (Entry<RrSP, Integer> entrada : bloqueados.entrySet()) {
+            aux = aux + ", " + entrada.getKey().getNomeArquivo();
+       }
+        return aux;
     }
 }
 
